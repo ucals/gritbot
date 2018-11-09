@@ -4,22 +4,29 @@ from fb_api import *
 
 def start(sender_id, last_message):
     send_message(sender_id, "Hi Carlos! Welcome to week 7!")
+    send_typing(sender_id)
     send_message(sender_id, "Your goal this week will be planning the semester, week-by-week "
                             "progress, and the intermediate milestones that you’ll use to get "
                             "feedback from your classmates and mentor as you go along.")
+    send_typing(sender_id)
     send_message(sender_id, "Your key deliverables for this week are:")
+    send_typing(sender_id)
     send_message(sender_id, "1) Project Proposal")
+    send_typing(sender_id)
     send_message(sender_id, "2) Peer reviews on Qualifier Question")
+    send_typing(sender_id)
     send_message(sender_id, "To deliver great work, it's important to plan in advance.")
+    send_typing(sender_id)
     send_message(sender_id, "First, let's plan the project proposal. It's expected 3-5 hours to "
                             "complete it.")
-    send_message(sender_id, "Which days are you planning to work on the project proposal?", last_message)
+    send_typing(sender_id)
+    send_message(sender_id, "Which days are you planning to work on the project proposal?", last_message, 0)
 
 
 def talk(sender_id, last_message, messaging_event):
     message_text = messaging_event["message"]["text"]
 
-    if last_message[sender_id] == "Which days are you planning to work on the project proposal?":
+    if last_message[sender_id] == 0:
         entities = messaging_event["message"]["nlp"]["entities"]
         if "datetime" in entities:
             msg = ""
@@ -31,16 +38,17 @@ def talk(sender_id, last_message, messaging_event):
                 last_dt = dt
 
             msg = msg[0:len(msg) - 5]
-            send_quick_yes_no(sender_id, "Do you want me to remind you on " + msg + "?", last_message)
+            send_quick_yes_no(sender_id, "Do you want me to remind you on " + msg + "?", last_message, 1)
         else:
             send_message(sender_id, "I didn't understand. Please repeat. You can say Thursday, Saturday, next Monday, "
                                     "Fri, etc.")
-            send_message(sender_id, "Which days are you planning to work on the project proposal?", last_message)
+            send_message(sender_id, "Which days are you planning to work on the project proposal?", last_message, 0)
 
-    elif last_message[sender_id][0:30] == "Do you want me to remind you o":
+    #elif last_message[sender_id][0:30] == "Do you want me to remind you o":
+    elif last_message[sender_id] == 1:
         if message_text not in ["Yes", "No"]:
             send_message(sender_id, "I didn't understand.")
-            send_quick_yes_no(sender_id, "Do you want me to remind you on these dates?", last_message)
+            send_quick_yes_no(sender_id, "Do you want me to remind you on these dates?", last_message, 1)
         else:
             if message_text == "Yes":
                 send_message(sender_id, "Ok, will do it!")
@@ -52,44 +60,48 @@ def talk(sender_id, last_message, messaging_event):
             quick_replies = [{"content_type": "text", "title": "Before Thursday", "payload": "before_thursday"},
                              {"content_type": "text", "title": "Before Sunday", "payload": "before_sunday"},
                              {"content_type": "text", "title": "After 7 days", "payload": "after_7_days"}]
-            send_quick_replies(sender_id, "When do you plan to finish all peer reviews?", quick_replies, last_message)
+            send_quick_replies(sender_id, "When do you plan to finish all peer reviews?", quick_replies, last_message,
+                               2)
 
-    elif last_message[sender_id] == "When do you plan to finish all peer reviews?":
+    elif last_message[sender_id] == 2:
         if message_text not in ["Before Thursday", "Before Sunday", "After 7 days"]:
             send_message(sender_id, "I didn't understand.")
             quick_replies = [{"content_type": "text", "title": "Before Thursday", "payload": "before_thursday"},
                              {"content_type": "text", "title": "Before Sunday", "payload": "before_sunday"},
                              {"content_type": "text", "title": "After 7 days", "payload": "after_7_days"}]
-            send_quick_replies(sender_id, "When do you plan to finish all peer reviews?", quick_replies, last_message)
+            send_quick_replies(sender_id, "When do you plan to finish all peer reviews?", quick_replies, last_message,
+                               2)
         elif message_text == "After 7 days":
-            send_quick_yes_no(sender_id, "That's really not ideal for your peers and you. Are you sure?", last_message)
+            send_quick_yes_no(sender_id, "That's really not ideal for your peers and you. Are you sure?", last_message,
+                              3)
         else:
             if message_text == "Before Thursday":
                 send_message(sender_id, "That's great: you will help your peers and earn all possible points!")
             elif message_text == "Before Sunday":
                 send_message(sender_id, "Well, that's not ideal, but I'm sure you will do your best to finish earlier.")
 
-            send_quick_yes_no(sender_id, "Do you want me to remind you to work on it?", last_message)
+            send_quick_yes_no(sender_id, "Do you want me to remind you to work on it?", last_message, 4)
 
-    elif last_message[sender_id] == "That's really not ideal for your peers and you. Are you sure?":
+    elif last_message[sender_id] == 3:
         if message_text not in ["Yes", "No"]:
             send_message(sender_id, "I didn't understand.")
-            send_quick_yes_no(sender_id, "That's really not ideal for your peers and you. Are you sure?", last_message)
+            send_quick_yes_no(sender_id, "That's really not ideal for your peers and you. Are you sure?", last_message,
+                              3)
         else:
             if message_text == "Yes":
-                send_quick_yes_no(sender_id, "Do you want me to remind you to work on it?", last_message)
+                send_quick_yes_no(sender_id, "Do you want me to remind you to work on it?", last_message, 4)
             elif message_text == "No":
                 send_message(sender_id, "Great that you changed your mind! Let me ask you again.")
                 quick_replies = [{"content_type": "text", "title": "Before Thursday", "payload": "before_thursday"},
                                  {"content_type": "text", "title": "Before Sunday", "payload": "before_sunday"},
                                  {"content_type": "text", "title": "After 7 days", "payload": "after_7_days"}]
                 send_quick_replies(sender_id, "When do you plan to finish all peer reviews?", quick_replies,
-                                   last_message)
+                                   last_message, 2)
 
-    elif last_message[sender_id] == "Do you want me to remind you to work on it?":
+    elif last_message[sender_id] == 4:
         if message_text not in ["Yes", "No"]:
             send_message(sender_id, "I didn't understand.")
-            send_quick_yes_no(sender_id, "Do you want me to remind you to work on it?", last_message)
+            send_quick_yes_no(sender_id, "Do you want me to remind you to work on it?", last_message, 4)
         else:
             if message_text == "Yes":
                 send_message(sender_id, "Ok, will do it!")
@@ -99,12 +111,12 @@ def talk(sender_id, last_message, messaging_event):
             send_message(sender_id, "Now, to end our interaction today, check the 2min video below about "
                                     "Neuroplasticity and how your brain works:")
             send_video(sender_id, "2266022390306094")
-            send_quick_yes_no(sender_id, "Did you like the video?", last_message)
+            send_quick_yes_no(sender_id, "Did you like the video?", last_message, 5)
 
-    elif last_message[sender_id] == "Did you like the video?":
+    elif last_message[sender_id] == 5:
         if message_text not in ["Yes", "No"]:
             send_message(sender_id, "I didn't understand.")
-            send_quick_yes_no(sender_id, "Did you like the video?", last_message)
+            send_quick_yes_no(sender_id, "Did you like the video?", last_message, 5)
         else:
             if message_text == "Yes":
                 send_message(sender_id, "Great to hear!")
