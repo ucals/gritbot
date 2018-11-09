@@ -1,3 +1,6 @@
 .ipynb_checkpoints/
 mockups/
 presentations/
+gritbot.iml
+.idea/
+__pycache__/
