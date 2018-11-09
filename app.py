@@ -31,7 +31,6 @@ def webhook():
     # endpoint for processing incoming messaging events
 
     data = request.get_json()
-    #log(data)  # you may not want to log every incoming message in production, but it's good for testing
 
     if data["object"] == "page":
 
@@ -40,22 +39,23 @@ def webhook():
 
                 if messaging_event.get("message"):  # someone sent us a message
 
-                    sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
-                    #recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
-                    message_text = messaging_event["message"]["text"]  # the message's text
-
-                    print("HELLO WORLD 2!!!")
+                    sender_id = messaging_event["sender"]["id"]
+                    message_text = messaging_event["message"]["text"]
                     print("message: " + message_text)
+
+                    # User have to send "Test" message to start flow 0
                     if message_text == "Test":
-                        current_flow[sender_id] = "flow_0"
-                        flow_0.start(sender_id, last_message)
+                        if sender_id not in current_flow:
+                            print("starting flow 0...")
+                            current_flow[sender_id] = "flow_0"
+                            flow_0.start(sender_id, last_message)
                     elif sender_id in last_message:
-                        print("HELLO WORLD 2!!!")
-                        print(current_flow[sender_id])
                         if current_flow[sender_id] == "flow_0":
                             flow_0.talk(sender_id, last_message, messaging_event)
                     else:
                         send_message(sender_id, "roger that!")
+                        if sender_id in current_flow:
+                            current_flow.pop(sender_id)     # resets the flow
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
