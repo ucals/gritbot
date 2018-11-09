@@ -101,6 +101,18 @@ def talk(sender_id, last_message, messaging_event):
             send_video(sender_id, "2266022390306094")
             send_quick_yes_no(sender_id, "Did you like the video?", last_message)
 
+    elif last_message[sender_id] == "Did you like the video?":
+        if message_text not in ["Yes", "No"]:
+            send_message(sender_id, "I didn't understand.")
+            send_quick_yes_no(sender_id, "Did you like the video?", last_message)
+        else:
+            if message_text == "Yes":
+                send_message(sender_id, "Great to hear!")
+            elif message_text == "No":
+                send_message(sender_id, "Sorry to hear that.")
+
+
+
             #    send_message(sender_id, "2nd message flow 1!")
         #elif last_message[sender_id] == "2nd message flow 1!":
         #    send_message(sender_id, "3rd message flow 1!")
