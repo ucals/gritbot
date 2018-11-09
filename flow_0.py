@@ -8,8 +8,8 @@ def start(sender_id, last_message):
                             "progress, and the intermediate milestones that you’ll use to get "
                             "feedback from your classmates and mentor as you go along.")
     send_message(sender_id, "Your key deliverables for this week are:")
-    send_message(sender_id, "1) Project Proposal;")
-    send_message(sender_id, "2) Peer reviews on Qualifier Question.")
+    send_message(sender_id, "1) Project Proposal")
+    send_message(sender_id, "2) Peer reviews on Qualifier Question")
     send_message(sender_id, "To deliver great work, it's important to plan in advance.")
     send_message(sender_id, "First, let's plan the project proposal. It's expected 3-5 hours to "
                             "complete it.")

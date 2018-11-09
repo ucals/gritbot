@@ -42,20 +42,11 @@ def webhook():
 
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     #recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
-                    message_text = messaging_event["message"]["text"]  # the message's text
+                    #message_text = messaging_event["message"]["text"]  # the message's text
 
-                    print("HELLO WORLD 2!!!")
-                    print("message: " + message_text)
-                    if message_text == "Test":
-                        current_flow[sender_id] = "flow_0"
-                        flow_0.start(sender_id, last_message)
-                    elif sender_id in last_message:
-                        print("HELLO WORLD 2!!!")
-                        print(current_flow[sender_id])
-                        if current_flow[sender_id] == "flow_0":
-                            flow_0.talk(sender_id, last_message, messaging_event)
-                    else:
-                        send_message(sender_id, "roger that!")
+                    #print("message: " + message_text)
+                    #send_message(sender_id, "you said: " + message_text)
+                    print(messaging_event["message"])
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass

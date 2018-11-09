@@ -3,6 +3,7 @@ import sys
 import json
 from datetime import datetime
 import requests
+import time
 
 
 def send_message(recipient_id, message_text, last_message={}):
@@ -75,6 +76,7 @@ def send_video(recipient_id, video_id, last_message={}):
         "Content-Type": "application/json"
     }
     data = json.dumps({
+        "messaging_type": "RESPONSE",
         "recipient": {
             "id": recipient_id
         },
@@ -95,6 +97,27 @@ def send_video(recipient_id, video_id, last_message={}):
     })
     last_message[recipient_id] = video_id
     r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
+    if r.status_code != 200:
+        log(r.status_code)
+        log(r.text)
+
+
+def send_typing(recipient_id, delay=0):
+    log("sending typing indicator to {recipient}".format(recipient=recipient_id))
+    params = {
+        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = json.dumps({
+        "recipient": {
+            "id": recipient_id
+        },
+        "sender_action": "typing_on"
+    })
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
+    # time.sleep(delay)
     if r.status_code != 200:
         log(r.status_code)
         log(r.text)
