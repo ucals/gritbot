@@ -53,7 +53,8 @@ def webhook():
                         if current_flow[sender_id] == "flow_0":
                             flow_0.talk(sender_id, last_message, messaging_event)
                     else:
-                        send_message(sender_id, "roger that!")
+                        send_message(sender_id, "Hi! I didn't understand your input. Please type 'Test' to experiment "
+                                                "Flow 0")
                         if sender_id in current_flow:
                             current_flow.pop(sender_id)     # resets the flow
 

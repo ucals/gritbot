@@ -120,16 +120,33 @@ def talk(sender_id, last_message, messaging_event):
         else:
             if message_text == "Yes":
                 send_message(sender_id, "Great to hear!")
+                send_message(sender_id, "Can you tell me in few words what did you learn about how your brain works?",
+                             last_message, 6)
             elif message_text == "No":
                 send_message(sender_id, "Sorry to hear that.")
+                send_message(sender_id, "Can you tell me in one sentence why didn't you like it and what did you "
+                                        "learn?", last_message, 6)
 
+    elif last_message[sender_id] == 6:
+        send_message(sender_id, "Understood!")
+        send_quick_yes_no(sender_id, "Do you want me to post that into Piazza's Friday Reflections thread?",
+                          last_message, 7)
 
+    elif last_message[sender_id] == 7:
+        if message_text not in ["Yes", "No"]:
+            send_message(sender_id, "I didn't understand.")
+            send_quick_yes_no(sender_id, "Do you want me to post that into Piazza's Friday Reflections thread?",
+                              last_message, 7)
+        else:
+            if message_text == "Yes":
+                send_message(sender_id, "Done!")
+            elif message_text == "No":
+                send_message(sender_id, "No worries!")
 
-            #    send_message(sender_id, "2nd message flow 1!")
-        #elif last_message[sender_id] == "2nd message flow 1!":
-        #    send_message(sender_id, "3rd message flow 1!")
-        #elif last_message[sender_id] == "3rd message flow 1!":
-        #    send_message(sender_id, "end of flow 1!")
-        #    last_message.pop(sender_id)
+            send_message(sender_id, "Carlos, thanks for the interaction! We will catch up tomorrow.")
+            send_message(sender_id, "Have a great day!")
+
+            last_message.pop(sender_id)     # resets the flow
+
     else:
-        send_message(sender_id, "roger that!")
+        send_message(sender_id, "Hi! I didn't understand your input. Please type 'Test' to experiment Flow 0")
