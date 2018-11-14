@@ -126,6 +126,17 @@ def send_typing(recipient_id, delay=0):
         log(r.text)
 
 
+def retrieve_profile_name(psid):
+    r = requests.get("https://graph.facebook.com/" + psid + "?fields=first_name,last_name&access_token=" +
+                      os.environ["PAGE_ACCESS_TOKEN"])
+    if r.status_code != 200:
+        log(r.status_code)
+        log(r.text)
+        return "Error"
+    else:
+        return r.json()['first_name']
+
+
 def log(msg, *args, **kwargs):  # simple wrapper for logging to stdout on heroku
     try:
         if type(msg) is dict:

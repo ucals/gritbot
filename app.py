@@ -2,7 +2,7 @@ import os
 import sys
 import json
 from datetime import datetime
-from fb_api import send_message
+from fb_api import send_message, retrieve_profile_name
 
 import requests
 from flask import Flask, request
@@ -54,7 +54,7 @@ def webhook():
                             flow_0.talk(sender_id, last_message, messaging_event)
                     else:
                         send_message(sender_id, "Hi! I didn't understand your input. Please type 'Test' to experiment "
-                                                "Flow 0")
+                                                "Flow 0.")
                         if sender_id in current_flow:
                             current_flow.pop(sender_id)     # resets the flow
 
@@ -73,7 +73,9 @@ def webhook():
 @app.route('/hello', methods=['GET'])
 def say_hello():
     sender_id = '2537414029616995'
-    send_message(sender_id, "Hello!")
+    #send_message(sender_id, "Hello!")
+    x = retrieve_profile_name(sender_id)
+    print(x)
     return "ok", 200
 
 

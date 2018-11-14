@@ -3,7 +3,8 @@ from fb_api import *
 
 
 def start(sender_id, last_message):
-    send_message(sender_id, "Hi Carlos! Welcome to week 7!")
+    profile_name = retrieve_profile_name(sender_id)
+    send_message(sender_id, "Hi " + profile_name + "! Welcome to week 7!")
     send_typing(sender_id)
     send_message(sender_id, "Your goal this week will be planning the semester, week-by-week "
                             "progress, and the intermediate milestones that you’ll use to get "
@@ -143,10 +144,11 @@ def talk(sender_id, last_message, messaging_event):
             elif message_text == "No":
                 send_message(sender_id, "No worries!")
 
-            send_message(sender_id, "Carlos, thanks for the interaction! We will catch up tomorrow.")
+            profile_name = retrieve_profile_name(sender_id)
+            send_message(sender_id, profile_name + ", thanks for the interaction! We will catch up tomorrow.")
             send_message(sender_id, "Have a great day!")
 
             last_message.pop(sender_id)     # resets the flow
 
     else:
-        send_message(sender_id, "Hi! I didn't understand your input. Please type 'Test' to experiment Flow 0")
+        send_message(sender_id, "Hi! I didn't understand your input. Please type 'Test' to experiment Flow 0.")
